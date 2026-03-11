@@ -1,0 +1,4 @@
+NetAct is Nokia's mamagement system used for monitoring and managing telecom networks.
+It acts as a centralized platform for mobile operators.
+It supports fault management, configuration management, and performance monitoring across radio, core, and transport networks.
+NetAct is critical for 5G deployment and ensures high availability of network services.
