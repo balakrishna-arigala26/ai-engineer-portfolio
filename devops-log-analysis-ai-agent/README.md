@@ -4,7 +4,7 @@ An automated Site Reliability Engineer (SRE) CLI tool that ingests raw server lo
 
 ## Architecture
 
-This project ytilizes a modular, microsrevice-style architecture to seprate file parsing from AI business logic:
+This project utilizes a modular, microservice-style architecture to seprate file parsing from AI business logic:
 
 * `main.py`: The CLI frontend. Handles user arguments, file ingestion, and terminal UI.
 * `analyzer.py`: The AI backend. Uses Regex to generate a log severity dashboard, then feeds the raw log data into a highly constained LangChain/Gemini pipeline to extract exact Linux troubleshooting commands.
@@ -53,4 +53,4 @@ python main.py sample_logs/syslog_crash.log
 
 When feeding a raw, chaotic Linux kernel panic ( OOM Killer ) log into the agent, it instantly generates this formatted triage report:
 
-
+![AI Agent Terminal Output](assets/terminal_output.png)
