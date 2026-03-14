@@ -1,3 +1,23 @@
-venv/
+# Environments
 .env
+venv/
+env/
+.venv/
+
+# Python Cache
 __pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# RAG & AI Specific Data
+*.faiss
+*.pkl
