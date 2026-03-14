@@ -1,0 +1,6 @@
+Mar 11 04:12:01 ubuntu-server kernel: [123456.789012] postgres invoked oom-killer: gfp_mask=0x100cca(GFP_HIGHUSER_MOVABLE), order=0, oom_score_adj=0
+Mar 11 04:12:01 ubuntu-server kernel: [123456.789015] CPU: 2 PID: 14502 Comm: postgres Not tainted 5.15.0-82-generic #91-Ubuntu
+Mar 11 04:12:01 ubuntu-server kernel: [123456.789045] Out of memory: Killed process 14502 (postgres) total-vm:4589012kB, anon-rss:4120000kB, file-rss:0kB, shmem-rss:0kB, UID:112 pgtables:8804kB oom_score_adj:0
+Mar 11 04:12:02 ubuntu-server systemd[1]: postgresql.service: Main process exited, code=killed, status=9/KILL
+Mar 11 04:12:02 ubuntu-server systemd[1]: postgresql.service: Failed with result 'oom-kill'.
+Mar 11 04:12:02 ubuntu-server systemd[1]: postgresql.service: Consumed 1h 45min 12s CPU time.
