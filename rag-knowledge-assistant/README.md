@@ -7,10 +7,15 @@ This system ingests complex, multi-column PDF documents, converts them into vect
 ## Tech Stack
 
 * **Language:** Python 3
+
 * **Framework:** LangChain
+
 * **Data Ingestion:** PyMuPDF (Layout-Aware Parsing)
+
 * **Vector Database:** FAISS (Facebook AI Similarity Search)
+
 * **Embeddings:** Google Generative AI (`gemini-embedding-001`)
+
 * **LLM:** Google Gemini (`gemini-2.5-flash-lite`)
 
 ## Project Architecture & Features
@@ -18,24 +23,24 @@ This system ingests complex, multi-column PDF documents, converts them into vect
 The project is split into two distinct processes to mimic real-world enterprise architectures:
 
 1. `ingest.py`: The Data Pipeline. It reads PDF files from the `/docs` directory using PyMuPDF to prevent column scrambling. It then uses a "scalpel" chunking strategy (150 characters) to prevent vector dilution, generates embeddings, and saves the FAISS database locally.
-2. `main.py`: The Inference Engine. It loads the vector database, accepts user queries, performs a tuned similarity search (`k=10`), aggregates the context, and sends it to the LLM. 
+2. `main.py`: The Inference Engine. It loads the vector database, accepts user queries, performs a tuned similarity search (`k=10`), aggregates the context, and sends it to the LLM.
 
 **X-Ray Debugger:** The `main.py` script includes a custom terminal debugger that prints the exact raw text retrieved by FAISS *before* it hits the LLM, ensuring the data pipeline is functioning perfectly.
 
 ## How to Run
 
-**1. Setup Environment
+## 1. Setup Environment
 
 Ensure you have a `.env` file in the parent directory containing your Google API key:
 `GEMINI_API_KEY="your_api_key_here"`
 
-**2. Install Dependencies
+## 2. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-**3.Ingest the Data ( Run this first )
+## 3.Ingest the Data ( Run this first )
 
 Place your PDF files in the `docs/` folder, then run the pipeline to build the local vector database:
 
@@ -43,7 +48,7 @@ Place your PDF files in the `docs/` folder, then run the pipeline to build the l
 python ingest.py
 ```
 
-**4. Query the Assistant
+## 4. Query the Assistant
 
 Run the main interface engine and ask your question:
 
