@@ -24,11 +24,35 @@ The project is split into two distinct processes to mimic real-world enterprise 
 
 ## How to Run
 
-**1. Setup Environment**
+**1. Setup Environment
+
 Ensure you have a `.env` file in the parent directory containing your Google API key:
 `GEMINI_API_KEY="your_api_key_here"`
 
-**2. Install Dependencies**
+**2. Install Dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
+
+**3.Ingest the Data ( Run this first )
+
+Place your PDF files in the `docs/` folder, then run the pipeline to build the local vector database:
+
+```bash
+python ingest.py
+```
+
+**4. Query the Assistant
+
+Run the main interface engine and ask your question:
+
+```bash
+python main.py
+```
+
+## Example Output
+
+When asking the assistant a technical question based on an ingested PDF, it runs the X-Ray Debugger to show the retrieved context before generating the final, hallucination-free answer:
+
+![RAG Assistant Output](assets/rag_output.png)
