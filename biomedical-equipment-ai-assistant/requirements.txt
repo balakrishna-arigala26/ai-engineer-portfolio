@@ -1,0 +1,8 @@
+streamlit
+langchain 
+langchain-community
+langchain-google-genai 
+faiss-cpu 
+pymupdf 
+python-dotenv 
+protobuf==5.29.3
