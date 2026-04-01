@@ -1,93 +1,91 @@
 # 🏥 Agentic RAG: Biomedical Equipment AI Assistant
 
-**Bridging 6 years of Biomedical Engineering expertise with modern AI Development.**
+![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)
+![LangChain](https://img.shields.io/badge/LangChain-v0.1-green.svg)
+![Streamlit](https://img.shields.io/badge/Streamlit-v1.32-red.svg)
+![Gemini](https://img.shields.io/badge/Gemini-2.5_Flash-orange.svg)
+![FAISS](https://img.shields.io/badge/FAISS-Vector_DB-lightgrey.svg)
 
-This application is an enterprise-grade AI Assistant designed specifically for HealthTech technicians. It allows users to upload massive, complex OEM service manuals (e.g., Philips, GE, Siemens, Maquet, FLIGHT MEDICAL) and instantly retrieve highly accurate troubleshooting steps, error code decryptions, safety warnings, and calibration procedures.
+An enterprise-grade Retrieval-Augmented Generation (RAG) system designed to assist Biomedical Equipment Technicians (BMETs) with complex troubleshooting, preventative maintenance, and safety procedures. 
 
-It is built using a modern **Agentic RAG (Retrieval-Augmented Generation)** architecture, prioritizing data privacy, speed, and strict hallucination guardrails.
-
----
-
-## 🚀 Key Features & Architectural Decisions
-
-* **v1.1 Logical Page Metadata Extraction:** Bypassed standard LangChain PDF loaders (which rely on absolute indexes) and wrote a custom PyMuPDF (`fitz`) extraction loop. The AI now actively hunts down the manufacturer's embedded *Logical Page Labels*, ensuring citations perfectly match the printed physical manuals and eliminating "page drift."
-
-* **Strict Hallucination Guardrails:** HealthTech requires absolute precision. The AI is explicitly prompted via LangChain Expression Language (LCEL) to state *"I cannot find this in the uploaded manuals"* if the answer is missing, completely preventing dangerous guesswork on life-support equipment.
-
-* **Zero-Latency RAG (Persistent Storage):** Engineered local vector database caching using FAISS. After the initial document ingestion, the application saves the vectorized data to the local disk, dropping future application boot and load times from minutes to milliseconds.
-
-* **Local, Privacy-First Embeddings:** Swapped out cloud-based embedding APIs for a local Hugging Face Model (`all-MiniLM-L6-v2`) to ensure proprietary hospital data never leaves the local machine during the vectorization phase.
-
-* **Modern AI Orchestration:** Bypasses legacy LangChain `.chains` in favor of the production-standard LCEL (`RunnablePassthrough`, `StrOutputParser`) for faster execution and granular prompt control.
+This application ingests massive, complex OEM service manuals and provides highly accurate, context-aware answers with **exact physical page citations**, strictly refusing to hallucinate when data is missing.
 
 ---
 
-## 🧪 Technical Validation & RAG Performance
+## 🚀 The Engineering Challenge
 
-### 1. High-Stakes Safety & Guardrails (v1.1)
+Standard "off-the-shelf" RAG pipelines break down when applied to highly technical, regulated domains like healthcare equipment maintenance. I built this application to solve three specific production walls:
 
-*Extracting strict capacitor discharge procedures and life-safety warnings from a Siemens X-Ray manual. The LLM is explicitly grounded to prioritize electrical warnings, format them cleanly for the UI, and cite exact pages.*
+1. **"Page Drift" in Metadata:** Standard PDF loaders use absolute digital indexing (e.g., digital page 120). When manuals have 20-page prefaces, the AI cites "Page 120", but the printed physical book says "Page 100".
 
-![Siemens Capacitor Discharge Safety](assets/siemens_safety_citations_v1.1.png)
+2. **Context Bleed:** Querying multiple device manuals simultaneously often results in the AI mixing up maintenance schedules or tool requirements across different machines.
 
-### 2. Multi-Document Fleet Routing
-
-*The FAISS vector database accurately routing a query through multiple simultaneously loaded OEM manuals (GE, Philips, Maquet, Siemens) without context-contamination.*
-
-![Multi-Device Fleet Troubleshooting](assets/multi_device_citations_v1.1.png)
-
-### 3. UI Preservation & Logical Metadata
-
-*Demonstrating the custom PyMuPDF extraction logic. The pipeline ensures complex, nested procedures (like touch screen calibrations) maintain their visual hierarchy and end with a single, highly accurate citation.*
-
-![UI Formatting and Logical Metadata](assets/philips_logical_metadata_v1.1.png)
+3. **Stateless Troubleshooting:** Real-world hardware repair is a dialogue. If a technician asks "What is Error Code 32?" and then follows up with "How do I fix *it*?", stateless LLMs lose the context.
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Architecture & Release History
 
-* **Frontend UI:** Streamlit
+### v1.1: Custom Ingestion & Zero Context Bleed
 
-* **LLM Engine:** Google Gemini 2.5 Flash Lite (`ChatGoogleGenerativeAI`)
+Tore out standard LangChain document loaders and engineered a custom data ingestion pipeline.
 
-* **Document Processing:** PyMuPDF (`fitz`)
+* **Custom PyMuPDF (`fitz`) Extraction:** Built a parsing loop that actively hunts down the manufacturer's embedded *Logical Page Labels*. The vector database now maps text to the physical printed page.
 
-* **Vector Database:** FAISS (Facebook AI Similarity Search)
+* **Surgical Metadata Routing:** The FAISS vector store can successfully contrast maintenance schedules across entirely different architectures in a single prompt without cross-contamination.
 
-* **Embeddings:** Hugging Face sentence-transformers (`all-MiniLM-L6-v2`)
+* **Strict Guardrails:** Prompt-engineered the LCEL pipeline to preserve nested diagnostic lists and completely refuse to guess ("I cannot find this") if a specific part number or procedure isn't explicitly in the manual.
+
+* **Visual Proof: v1.1 Zero Context Bleed & Logical Citations**
+
+![Multi-Device Citations](assets/multi_device_citations_v1.1.png)
+
+### v1.2: Stateful Conversational Memory
+
+Upgraded the AI from a "smart search engine" into a true Agentic Assistant.
+
+* **LangChain Message History:** Implemented `RunnableWithMessageHistory` to wrap the LCEL chain, injecting previous chat logs into the prompt via `MessagesPlaceholder`.
+
+* **Multi-Turn Context Resolution:** The AI successfully resolves pronouns ("it", "that part") across multiple conversational turns, allowing technicians to drill down from high-level errors to deep hardware disassembly steps.
+
+* **Streamlit Session State:** Synchronized the backend LangChain memory buffer with Streamlit's UI rendering loop for a seamless, ChatGPT-style interface.
+
+* **Visual Proof: v1.2 Multi-Turn Memory Resolution**
+
+*The AI successfully remembers the GE Venue Fit R5/R6 context across multiple turns, mapping the pronoun "that procedure" to the correct toolset without hallucinating.*
+
+![GE Venue Fit Context - Turn 1](assets/v1.2_ge_memory_turn1.jpg)
+
+![GE Venue Fit Context - Turn 2](assets/v1.2_ge_memory_turn2.jpg)
 
 ---
 
-## 🧠 Engineering Challenges & Troubleshooting Log
+## 💻 Tech Stack
 
-Building this application required solving several real-world environment and API routing issues:
+* **Core Framework:** LangChain (LCEL)
 
-1. **The Protobuf Dependency Conflict:** Streamlit required an older version of the `protobuf` library than Google's Gemini SDK.
+* **LLM:** Google Gemini 2.5 Flash Lite
 
-    * *Solution:* Isolated the environment and forcefully downgraded protobuf (`pip install protobuf==5.29.3`) to find the exact version that stabilized both libraries without breaking the LangChain wrapper.
+* **Embeddings:** HuggingFace (`all-MiniLM-L6-v2`)
 
-2. **LangChain Legacy Deprecation:** The initial build attempted to use `langchain.chains.RetrievalQA`, which caused `ModuleNotFoundError` issues as LangChain rapidly deprecates older modules.
+* **Vector Database:** FAISS (Facebook AI Similarity Search) - *Configured for local persistence*
 
-    * *Solution:* Completely refactored the AI logic to use **LCEL (LangChain Expression Language)**, making the pipeline faster, more modern, and immune to legacy import errors.
+* **Document Processing:** PyMuPDF (`fitz`), LangChain `RecursiveCharacterTextSplitter`
 
-3. **Google API Embedding Routing Errors (`404 NOT_FOUND`):** The `v1beta` Gemini API struggled to correctly route requests to legacy embedding models via the LangChain wrapper, causing silent crashes during ingestion.
-
-    * *Solution:* Architected a hybrid approach. Kept Gemini for the final text generation but swapped the embedding engine to a local, open-source Hugging Face model (`sentence-transformers/all-MiniLM-L6-v2`). This bypassed the API bottleneck entirely, improved processing speed, and added a layer of data privacy.
-
-4. **API Rate Limiting & Quota Exhaustion:** Initial testing of multi-document ingestion rapidly hit the `429 RESOURCE_EXHAUSTED` limits of the free-tier LLM.
-
-    * *Solution:* Implemented environment variable isolation using `python-dotenv` to safely manage API keys and successfully orchestrated a persistent local vector database so documents only need to be processed via the CPU once, saving massive amounts of compute time and API overhead.
+* **Frontend:** Streamlit
 
 ---
 
-## ⚙️ How to Run Locally
+## ⚙️ Installation & Local Setup
 
-**1. Clone the repository and navigate to the project directory:**
+1. **Clone the repository:**
 
 ```bash
-git clone https://github.com/balakrishna-arigala26/ai-engineer-portfolio.git
+git clone [https://github.com/balakrishna-arigala26/ai-engineer-portfolio.git](https://github.com/balakrishna-arigala26/ai-engineer-portfolio.git)
 cd ai-engineer-portfolio/biomedical-equipment-ai-assistant
 ```
+
+---
 
 **2. Create and activate virtual environment:**
 
@@ -116,14 +114,14 @@ GOOGLE_API_KEY="your_api_key_here"
 streamlit run app.py
 ```
 
-## 🔮 Future Upgrades Roadmap
+## 🧪 Testing the Memory Buffer (v1.2)
 
-(Currently building in public on Linkedin)
+To verify the multi-turn context resolution without spinning up the UI, a standalone backend test script is included.
 
-* **v1.0 (MVP):** Core RAG Architecture & Zero-Latency Persistence [✅ Completed]
+```bash
+python test_memory.py
+```
 
-* **v1.1 (Verifiability Update):** Logical Metadata Extraction & Strict Citation Guardrails [✅ Completed]
+## 🗺️ Roadmap
 
-* **v1.2 (Conversational Memory):** Add a rolling buffer to allow technicians to ask follow-up questions without losing context. [⏳ Planned]
-
-* **v1.3 (Advanced Retrieval):** Implement a Cross-Encoder Re-Ranker (MMR) to improve needle-in-a-haystack data extraction. [⏳ Planned]
+v1.3 (Upcoming): Multi-modal RAG. Upgrading the ingestion pipeline to capture embedded schematics and diagrams using vision-capable embedding models, allowing the AI to return visual troubleshooting aids alongside text.
