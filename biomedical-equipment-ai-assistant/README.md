@@ -54,9 +54,9 @@ Upgraded the AI from a "smart search engine" into a true Agentic Assistant.
 
 *The AI successfully remembers the GE Venue Fit R5/R6 context across multiple turns, mapping the pronoun "that procedure" to the correct toolset without hallucinating.*
 
-![GE Venue Fit Context - Turn 1](assets/v1.2_ge_memory_turn1.jpg)
+![GE Venue Fit Context - Turn 1](assets/v1.2_ge_memory_turn1.png)
 
-![GE Venue Fit Context - Turn 2](assets/v1.2_ge_memory_turn2.jpg)
+![GE Venue Fit Context - Turn 2](assets/v1.2_ge_memory_turn2.png)
 
 ---
 
