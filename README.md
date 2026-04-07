@@ -24,7 +24,7 @@ AI Software Engineer specializing in Applied Large Language Models (LLMs), Agent
 
 ## 🏆 Featured Projects
 
-### 1. [Enterprise Biomedical AI Microservice (RAG)](https://github.com/balakrishna-arigala26/biomedical-api-service)
+### 1. [Enterprise Biomedical AI Microservice (RAG)](https://github.com/balakrishna-arigala26/ai-engineer-portfolio/tree/main/biomedical-api-service)
 
 An asynchronous, Dockerized AI backend designed to provide strictly verifiable, hallucination-free troubleshooting assistance for clinical engineering teams.
 
@@ -34,7 +34,7 @@ An asynchronous, Dockerized AI backend designed to provide strictly verifiable, 
 
 * **Architecture:** Implemented stateful conversational memory (`RunnableWithMessageHistory`) and exposed production-ready endpoints fully documented with Swagger UI.
 
-* [➡️ View Repository & Code](https://github.com/balakrishna-arigala26/biomedical-api-service)
+* [➡️ View Repository & Code](https://github.com/balakrishna-arigala26/ai-engineer-portfolio/tree/main/biomedical-api-service)
 
 ### 2. DevOps Log Analysis AI Agent
 
