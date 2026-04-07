@@ -1,71 +1,61 @@
-# Balakrishna Arigala | AI Engineer Portfolio
+# Balakrishna Arigala | AI Software Engineer Portfolio
 
-[![GitHub Profile](https://img.shields.io/badge/GitHub-Profile-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/balakrishna-arigala26)
+## LLM & Agentic RAG Specialist | Python Automation | Enterprise Architecture
 
-I am an **AI Software Engineer** specializing in Applied Large Language Models (LLMs), Agentic RAG architectures, and intelligent automation.
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue.svg)](https://linkedin.com/in/)
 
-My engineering foundation is built on 8 years of cross-functional experience. As a **Python Automation Engineer at Wipro**, I engineered robust, scalable automation scripts for enterprise telecom environments (Nokia NetAct). Prior to that, I spent 6 years in **Biomedical Engineering**, mastering complex healthcare systems, strict regulatory standards, and medical hardware.
+[![Email](https://img.shields.io/badge/Email-Contact-red.svg)](mailto:balakrishna.arigala26@gmail.com)
 
-Today, I bridge these disciplines by building secure, production-ready Generative AI applications that solve real-world bottlenecks in HealthTech, DevOps, and IT Operations.
+## 👨‍💻 About Me
 
-## Core Competencies
+AI Software Engineer specializing in Applied Large Language Models (LLMs), Agentic RAG architectures, and intelligent Python automation. I combine 8 years of cross-functional experience—including robust enterprise CI/CD and automation deployment—with a 6-year foundation in complex biomedical systems. My core focus is building secure, production-ready Generative AI applications that solve practical bottlenecks in IT operations, DevOps, and specialized healthcare hardware.
 
-- **AI Engineering:** RAG Architectures, Agentic Workflows, LangChain Expression Language (LCEL), Prompt Engineering, Local Embeddings (Hugging Face).
+## 🛠️ Core Technical Skills
 
-- **Software Engineering:** Python, FastAPI, Streamlit, Git, RESTful APIs.
+* **Generative AI & LLMs:** Agentic Workflows (LCEL), RAG, LangChain, Hugging Face (Local Embeddings), FAISS, Google Gemini SDK, Prompt Engineering
 
-- **Infrastructure & Ops:** Linux Administration, Bash Scripting, CI/CD, Docker, Robot Framework, Regex.
+* **Languages & Frameworks:** Python (Expert), FastAPI, Streamlit, Bash/Shell, Robot Framework
 
----
+* **DevOps & Infrastructure:** Docker, AWS (IAM, EC2, S3, ECR), GitHub Actions, Jenkins, Linux Administration
 
-## 🚀 Featured AI Projects
-
-### [1. Agentic RAG: Biomedical Equipment AI Assistant](./biomedical-equipment-ai-assistant) `[✅ Completed]`
-
-**The Problem:** Healthcare technicians waste hours manually parsing thousands of pages of complex OEM service manuals to diagnose equipment failures.
-
-**The Solution:** Built a secure, multi-document RAG application tailored for life-support hardware.
-
-- **Tech Stack:** Streamlit, FAISS, Google Gemini 2.5, Hugging Face `all-MiniLM-L6-v2`, LangChain (LCEL).
-
-- **Key Achievements:** Swapped cloud APIs for local sentence-transformer embeddings to ensure proprietary hospital data remains on-premises. Implemented strict hallucination guardrails critical for medical environments. Engineered local persistent vector storage to drop application load times to milliseconds.
-
-### [2. DevOps Log Analysis AI Agent](./devops-log-analysis-ai-agent) `[✅ Completed]`
-
-**The Problem:** SREs and SysAdmins suffer from alert fatigue when manually debugging massive, unstructured server error logs.
-
-**The Solution:** Developed an automated command-line agent that ingests raw server logs, categorizes severity, and extracts actionable root-cause troubleshooting commands.
-
-- **Tech Stack:** Python, Google Gemini SDK, Regex, Linux CLI.
-
-- **Key Achievements:** Designed the tool to generate visual dashboards directly in the terminal, drastically reducing Mean Time To Resolution (MTTR) for critical infrastructure alerts.
-
-### [3. RAG Knowledge Assistant](./rag-knowledge-assistant) `[✅ Completed]`
-
-**The Problem:** Standard LLMs hallucinate answers when queried about proprietary or highly technical internal documents.
-
-**The Solution:** Engineered a foundational Retrieval-Augmented Generation pipeline to ground the AI's responses strictly in uploaded factual data.
-
-- **Tech Stack:** Python, FAISS (Vector Database), LangChain.
-
-### [4. AI CLI Assistant](./ai-cli-assistant) `[✅ Completed]`
-
-**The Problem:** Context-switching between the terminal and a browser-based AI disrupts developer flow.
-
-**The Solution:** Built a native command-line AI assistant capable of answering questions, summarizing system states, and generating executable scripts directly from the Linux prompt.
+* **Testing & Data:** SQL (Oracle), pytest, RESTful APIs
 
 ---
 
-## Current Focus
+## 🏆 Featured Projects
 
-I am currently seeking full-time opportunities where I can leverage my enterprise Python automation background and clinical domain expertise to build intelligent, workflow-accelerating tools.
+### 1. [Enterprise Biomedical AI Microservice (RAG)](https://github.com/balakrishna-arigala26/biomedical-api-service)
 
-**Target Roles:**
+An asynchronous, Dockerized AI backend designed to provide strictly verifiable, hallucination-free troubleshooting assistance for clinical engineering teams.
 
-- **Core AI:** AI Engineer | Generative AI Engineer | LLM Engineer
+* **Tech Stack:** `FastAPI`, `Docker`, `LangChain`, `Google Gemini`, `FAISS`, `PyMuPDF`
 
-- **Intelligent Automation:** AI Automation Engineer | Clinical Data Automation Engineer
+* **Key Impact:** Solved standard PDF "page drift" by engineering a custom PyMuPDF extraction pipeline. By tagging vector metadata with exact physical page numbers, the LLM is forced to cite the physical manual accurately, completely eliminating cross-device context bleed.
 
-- **HealthTech Specialized:** AI Engineer (HealthTech / MedTech) | AI Solutions Engineer (Healthcare / Life Sciences) | Predictive Maintenance AI Engineer (Medical Devices)
+* **Architecture:** Implemented stateful conversational memory (`RunnableWithMessageHistory`) and exposed production-ready endpoints fully documented with Swagger UI.
 
-Let's connect and build the future of Applied AI.
+* [➡️ View Repository & Code](https://github.com/balakrishna-arigala26/biomedical-api-service)
+
+### 2. DevOps Log Analysis AI Agent
+
+An automated Python-based CLI agent that ingests unstructured raw server logs to accelerate DevOps incident response.
+
+* **Tech Stack:** `Python`, `Generative AI`, `Regex`
+
+* **Key Impact:** Categorizes error severity with 90% accuracy and extracts actionable, root-cause troubleshooting commands directly from the raw log stream.
+
+### 3. Native AI CLI Assistant
+
+A native command-line AI tool designed for developers and system administrators.
+
+* **Tech Stack:** `Bash`, `Python`, `LLM APIs`
+
+* **Key Impact:** Allows users to query system states and generate executable bash scripts directly from the Linux prompt, significantly improving terminal workflow efficiency.
+
+---
+
+## 📜 Education & Certifications
+
+* **Generative AI for Healthcare** | *Google Cloud* (March 2026)
+
+* **M.Tech in Biomedical Engineering** | *Andhra University, Visakhapatnam, India*
