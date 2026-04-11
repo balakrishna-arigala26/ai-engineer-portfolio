@@ -1,5 +1,7 @@
 # Enterprise Biomedical AI Microservice (RAG)
 
+![CI Pipeline](https://github.com/balakrishna-arigala26/ai-engineer-portfolio/actions/workflows/python-ci.yml/badge.svg)
+
 An asynchronous, Dockerized AI backend designed to provide verifiable, hallucination-free troubleshooting assistance for clinical engineering teams.
 
 Standard LLMs are prone to hallucination and "context bleed" when queried across multiple technical manuals, which presents a critical safety hazard in HealthTech environments. This microservice solves these issues by implementing a strictly guarded Retrieval-Augmented Generation (RAG) pipeline with exact physical page citations.
@@ -32,6 +34,12 @@ Standard LLMs are prone to hallucination and "context bleed" when queried across
 
 * **Deployment:** Docker
 
+## 🏗️ System Architecture
+
+![Biomedical AI Architecture](biomedical-rag-architecture.png)
+
+This architecture outlines both the asynchronous document ingestion pipeline (utilizing PyMuPDF for physical page metadata tagging) and the conversational retrieval pipeline (enforcing strict guardrails before LLM generation).
+
 ## 📦 Quick Start (Docker)
 
 To spin up this microservice locally for immediate testing, you need Docker installed and a Gemini API key.
@@ -45,7 +53,7 @@ cd biomedical-api-service
 
 **2. Set Your environment variables:**
 
-Create a .env file in the root dirctory:
+Create a .env file in the root directory:
 
 ```text
 GEMINI_API_KEY=your_api_key_here
