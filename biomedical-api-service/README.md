@@ -1,6 +1,6 @@
 # Enterprise Biomedical AI Microservice (RAG)
 
-![CI Pipeline](https://github.com/balakrishna-arigala26/ai-engineer-portfolio/actions/workflows/python-ci.yml/badge.svg)
+![CI Pipeline](https://github.com/balakrishna-arigala26/ai-engineer-portfolio/actions/workflows/python-ci.yml/badge.svg?branch=main)
 
 An asynchronous, Dockerized AI backend designed to provide verifiable, hallucination-free troubleshooting assistance for clinical engineering teams.
 
