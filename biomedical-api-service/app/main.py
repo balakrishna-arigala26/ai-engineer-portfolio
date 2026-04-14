@@ -2,7 +2,13 @@ import logging
 from typing import List, Annotated
 from fastapi import FastAPI, Depends, HTTPException, UploadFile as UF, File
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse  
 from pydantic import WithJsonSchema
+
+# --- LOAD ENV VARS BEFORE IMPORTING YOUR AI ENGINE ---
+from dotenv import load_dotenv
+load_dotenv()
+# -----------------------------------------------------
 
 # Local application imports
 from app.models import ChatRequest, ChatResponse
@@ -12,12 +18,12 @@ from app.utils import process_pdf
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# --- THE SWAGGER UI BUG FIX ---
+
 # Forces Swagger to recognize the upload as a file picker instead of an array<string>
 UploadFile = Annotated[UF, WithJsonSchema({"type": "string", "format": "binary"})]
 # ------------------------------
 
-app = FastAPI(title="Biomedical AI Service", version="1.0.0")
+app = FastAPI(title="Enterprise Biomedical AI Service", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -48,6 +54,24 @@ async def ask_biomedical_ai(
     except Exception as e:
         logger.error(f"Chat Error: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal AI Engine Error")
+
+# --- NEW STREAMING ROUTE ADDED HERE ---
+@app.post("/ask-stream")
+async def ask_biomedical_ai_stream(
+    request: ChatRequest, 
+    engine: BiomedicalAIEngine = Depends(get_ai_engine)
+):
+    try:
+        logger.info(f"Streaming question for session: {request.session_id}")
+        # We return a StreamingResponse to keep the connection open for tokens
+        return StreamingResponse(
+            engine.stream_question(request.question, request.session_id),
+            media_type="text/plain"
+        )
+    except Exception as e:
+        logger.error(f"Streaming Error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal AI Streaming Error")
+# --------------------------------------
 
 @app.post("/upload-manuals")
 async def upload_multiple_manuals(

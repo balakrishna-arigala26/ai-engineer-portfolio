@@ -4,4 +4,7 @@ __pycache__/
 *.pyc
 .DS_Store
 biomedical_faiss_index/
+chroma_db/
+uploads/
+.pytest_cache/
 

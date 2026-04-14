@@ -6,9 +6,13 @@ An asynchronous, Dockerized AI backend designed to provide verifiable, hallucina
 
 Standard LLMs are prone to hallucination and "context bleed" when queried across multiple technical manuals, which presents a critical safety hazard in HealthTech environments. This microservice solves these issues by implementing a strictly guarded Retrieval-Augmented Generation (RAG) pipeline with exact physical page citations.
 
-![Swagger UI showing a successful RAG response with citations](swagger-demo.png)
+![Swagger UI showing a successful RAG response with citations](assets/images/swagger-demo.png)
 
 ## 🚀 Key Features & Engineering Solutions
+
+* **Full-Stack Observability (LangSmith):** Instrumented with complete telemetry to monitor execution waterfalls, sub-chain latency, vector retrieval speeds, and per-query token cost tracking, ensuring enterprise-level reliability and rapid debugging.
+  
+![LangSmith Trace Dashboard detailing RAG pipeline execution](assets/images/langsmith-trace.png)
 
 * **Anti-Hallucination Guardrails:** Employs strict prompt engineering to force the LLM to answer *only* from the vector context. If a procedure is not found in the ingested manuals, the API explicitly refuses to guess.
 
@@ -24,7 +28,9 @@ Standard LLMs are prone to hallucination and "context bleed" when queried across
 
 * **Framework:** FastAPI, Python 3.12
 
-* **AI/Orchestration:** LangChain, Google Gemini (gemini-2.5-flash-lite)
+* **AI/Orchestration:** LangChain, Google Gemini (gemini-2.5-flash)
+
+* **Observability:** LangSmith
 
 * **Vector Database:** FAISS (Local persistence for HIPAA/security compliance)
 
@@ -36,7 +42,7 @@ Standard LLMs are prone to hallucination and "context bleed" when queried across
 
 ## 🏗️ System Architecture
 
-![Biomedical AI Architecture](biomedical-rag-architecture.png)
+![Biomedical AI Architecture](assets/images/biomedical-rag-architecture.png)
 
 This architecture outlines both the asynchronous document ingestion pipeline (utilizing PyMuPDF for physical page metadata tagging) and the conversational retrieval pipeline (enforcing strict guardrails before LLM generation).
 
@@ -56,7 +62,14 @@ cd biomedical-api-service
 Create a .env file in the root directory:
 
 ```text
-GEMINI_API_KEY=your_api_key_here
+# LLM Provider
+GOOGLE_API_KEY="your_gemini_api_key"
+
+# LangSmith Observability
+LANGCHAIN_TRACING_V2=true
+LANGCHAIN_ENDPOINT="[https://api.smith.langchain.com](https://api.smith.langchain.com)"
+LANGCHAIN_API_KEY="your_langsmith_api_key"
+LANGCHAIN_PROJECT="enterprise-biomedical-ai-v1"
 ```
 
 **3. Build and Run the Container:**
@@ -96,11 +109,7 @@ pip install -r requirements.txt
 
 **4. Set your environment variables:**
 
-Create a .env file in the root directory:
-
-```text
-GEMINI_API_KEY=your_api_key_here
-```
+Ensure your `.env` file is created exactly as shown in the Docker setup above.
 
 **5. Start the FastAPI server:**
 
