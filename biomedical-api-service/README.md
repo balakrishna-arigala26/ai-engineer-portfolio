@@ -4,13 +4,25 @@
 
 An asynchronous, Dockerized AI backend designed to provide verifiable, hallucination-free troubleshooting assistance for clinical engineering teams.
 
-Standard LLMs are prone to hallucination and "context bleed" when queried across multiple technical manuals, which presents a critical safety hazard in HealthTech environments. This microservice solves these issues by implementing a strictly guarded Retrieval-Augmented Generation (RAG) pipeline with exact physical page citations.
+## ⚠️ The Problem: Why This Project Exists
+
+Standard LLMs present a critical safety hazard in healthcare and clinical environments because they naturally:
+
+* **Hallucinate procedures** when unsure.
+
+* **Suffer from "Context Bleed"**, mixing up maintenance schedules across different medical devices.
+
+* **Provide non-verifiable answers** without physical source citations.
+
+## ✅ The Solution
+
+This system is a strictly guarded Retrieval-Augmented Generation (RAG) microservice that solves these issues by forcing 100% context-grounded answers, returning exact physical page citations, and maintaining stateful troubleshooting memory.
 
 ![Swagger UI showing a successful RAG response with citations](assets/images/swagger-demo.png)
 
-## 🚀 Key Features & Engineering Solutions
+## 🚀 Engineering Solutions & Features
 
-* **Full-Stack Observability (LangSmith):** Instrumented with complete telemetry to monitor execution waterfalls, sub-chain latency, vector retrieval speeds, and per-query token cost tracking, ensuring enterprise-level reliability and rapid debugging.
+* **Full-Stack Observability (LangSmith):** Instrumented with complete telemetry to monitor execution waterfalls, sub-chain latency, vector retrieval speeds, and per-query token cost tracking.
   
   ![LangSmith Trace Dashboard detailing RAG pipeline execution](assets/images/langsmith-trace.png)
 
@@ -18,11 +30,19 @@ Standard LLMs are prone to hallucination and "context bleed" when queried across
 
 * **"Page Drift" Correction:** Standard PDF loaders rely on digital indexing, causing citation mismatch. This service utilizes custom `PyMuPDF` extraction to identify and index the manufacturer's logical page labels, ensuring the AI cites the physical book accurately.
 
-* **Context Bleed Prevention:** Every ingested chunk is tagged with its source filename in the ChromaDB metadata. The retriever isolates hardware-specific context, preventing the AI from mixing up maintenance schedules across different medical devices.
+* **Context Bleed Prevention:** Every ingested chunk is tagged with its source filename in the ChromaDB metadata. The retriever isolates hardware-specific context.
 
-* **Stateful Troubleshooting:** Real-world hardware repair is conversational. Integrated `RunnableWithMessageHistory` tracks `session_id`s, allowing technicians to ask follow-up questions without losing contextual state.
+* **Stateful Conversations:** Real-world hardware repair is conversational. Integrated `RunnableWithMessageHistory` tracks `session_id`s, allowing technicians to ask follow-up questions without losing contextual state.
 
-* **UI-Perfect Formatting:** The API enforces strict Markdown structuring (separating procedural steps from bolded safety warnings) so the downstream frontend UI always renders a clean, readable layout.
+## 🏗️ System Architecture
+
+The system is decoupled into two independent workflows to ensure scalability:
+
+1. **Ingestion Pipeline:** Asynchronously parses PDFs, applies metadata, chunks text, generates HuggingFace embeddings, and persists to ChromaDB.
+
+2. **Query Pipeline:** Retrieves context, applies guardrails, formats markdown, and streams outputs via Server-Sent Events (SSE).
+
+![Biomedical AI Architecture](assets/images/biomedical-rag-architecture.png)
 
 ## 🛠️ Tech Stack
 
@@ -32,19 +52,13 @@ Standard LLMs are prone to hallucination and "context bleed" when queried across
 
 * **Observability:** LangSmith
 
-* **Vector Database:** ChromaDB (Native disk persistence for secure, offline clinical environments)
+* **Vector Database:** ChromaDB (Native disk persistence)
 
 * **Embeddings:** HuggingFace (`all-MiniLM-L6-v2`)
 
 * **Document Parsing:** PyMuPDF (`fitz`)
 
 * **Deployment:** Docker
-
-## 🏗️ System Architecture
-
-![Biomedical AI Architecture](assets/images/biomedical-rag-architecture.png)
-
-This architecture outlines both the asynchronous document ingestion pipeline (utilizing PyMuPDF for physical page metadata tagging) and the conversational retrieval pipeline (enforcing strict guardrails before LLM generation).
 
 ## 📦 Quick Start (Docker)
 
@@ -85,7 +99,7 @@ Navigate to http://localhost:8000/docs to test the endpoints via Swagger UI.
 
 ## 💻 Local Development (Without Docker)
 
-Because this microservice uses a decoupled architecture, you will need two seperate terminal windows to run the backend API and the frontend UI simultaneously.
+To run the application locally fro development, you will need two seperate terminal windows for the backend and frontend.
 
 **1. Clone the repository:**
 
@@ -145,7 +159,6 @@ Queries the RAG pipeline with a technician's question and a session ID for conve
 * **Body (JSON):**
 
 ```text
-JSON
 {
     "question": "What is the procedure to remove the battery on the GE Venue Fit?",
     "session_id": "tech-session-01"
