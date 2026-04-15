@@ -2,7 +2,8 @@ import os
 from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_community.vectorstores import FAISS
+# from langchain_community.vectorstores import FAISS
+from langchain_chroma import Chroma
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_community.chat_message_histories import ChatMessageHistory
@@ -13,52 +14,47 @@ load_dotenv()
 
 class BiomedicalAIEngine:
     def __init__(self):
-        self.db_dir = "biomedical_faiss_index"
+        self.db_dir = "chroma_db" 
         
         # Keeping your secure, local embeddings for data privacy
         self.embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
         self.store = {} 
-        self.vector_store = self._load_vector_store()
         
-        # 1. Define the LLM here so it's ready for the whole class
+        # Chroma automatically loads from disk if it exists, or creates it if it doesn't
+        self.vector_store = Chroma(
+            persist_directory=self.db_dir,       
+            embedding_function=self.embeddings   
+        ) 
+        
+        # Define the LLM here so it's ready for the whole class
         self.llm = ChatGoogleGenerativeAI(
             model="gemini-2.5-flash", 
             temperature=0.1, 
-            streaming=True # Crucial for fast UI feedback
+            streaming=True 
         )
 
-    def _load_vector_store(self):
-        index_file = os.path.join(self.db_dir, "index.faiss")
-        if os.path.exists(index_file):
-            return FAISS.load_local(
-                self.db_dir, 
-                self.embeddings, 
-                allow_dangerous_deserialization=True
-            )
-        return None
-
+    
     def update_vector_store(self, chunks):
-        """Adds new PDF chunks to the persistent FAISS index."""
-        if self.vector_store is None:
-            self.vector_store = FAISS.from_documents(chunks, self.embeddings)
-        else:
-            new_db = FAISS.from_documents(chunks, self.embeddings)
-            self.vector_store.merge_from(new_db)
-        
-        self.vector_store.save_local(self.db_dir)
+        """Adds new PDF chunks to the persistent ChromaDB index."""
+        self.vector_store.add_documents(chunks)
 
+    
     def get_session_history(self, session_id: str):
         if session_id not in self.store:
             self.store[session_id] = ChatMessageHistory()
         return self.store[session_id]
-
+    
+    
     def _get_chain(self):
         """Builds the conversational RAG chain with your strict formatting"""
-        if self.vector_store is None:
-            raise ValueError("No database found. Please upload manuals first.")
 
-        # Define the retriever and formatting locally
+        # Check if the database is empty
+        if self.vector_store._collection.count() == 0:
+            raise ValueError("No database found. Please upload manuals first.")
+        
+        
         retriever = self.vector_store.as_retriever(search_kwargs={"k": 4})
+
         
         def format_docs(docs):
             return "\n\n".join(doc.page_content for doc in docs)

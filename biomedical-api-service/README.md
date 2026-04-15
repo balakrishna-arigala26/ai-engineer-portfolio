@@ -12,13 +12,13 @@ Standard LLMs are prone to hallucination and "context bleed" when queried across
 
 * **Full-Stack Observability (LangSmith):** Instrumented with complete telemetry to monitor execution waterfalls, sub-chain latency, vector retrieval speeds, and per-query token cost tracking, ensuring enterprise-level reliability and rapid debugging.
   
-![LangSmith Trace Dashboard detailing RAG pipeline execution](assets/images/langsmith-trace.png)
+  ![LangSmith Trace Dashboard detailing RAG pipeline execution](assets/images/langsmith-trace.png)
 
 * **Anti-Hallucination Guardrails:** Employs strict prompt engineering to force the LLM to answer *only* from the vector context. If a procedure is not found in the ingested manuals, the API explicitly refuses to guess.
 
 * **"Page Drift" Correction:** Standard PDF loaders rely on digital indexing, causing citation mismatch. This service utilizes custom `PyMuPDF` extraction to identify and index the manufacturer's logical page labels, ensuring the AI cites the physical book accurately.
 
-* **Context Bleed Prevention:** Every ingested chunk is tagged with its source filename in the FAISS metadata. The retriever isolates hardware-specific context, preventing the AI from mixing up maintenance schedules across different medical devices.
+* **Context Bleed Prevention:** Every ingested chunk is tagged with its source filename in the ChromaDB metadata. The retriever isolates hardware-specific context, preventing the AI from mixing up maintenance schedules across different medical devices.
 
 * **Stateful Troubleshooting:** Real-world hardware repair is conversational. Integrated `RunnableWithMessageHistory` tracks `session_id`s, allowing technicians to ask follow-up questions without losing contextual state.
 
@@ -32,7 +32,7 @@ Standard LLMs are prone to hallucination and "context bleed" when queried across
 
 * **Observability:** LangSmith
 
-* **Vector Database:** FAISS (Local persistence for HIPAA/security compliance)
+* **Vector Database:** ChromaDB (Native disk persistence for secure, offline clinical environments)
 
 * **Embeddings:** HuggingFace (`all-MiniLM-L6-v2`)
 
@@ -85,7 +85,7 @@ Navigate to http://localhost:8000/docs to test the endpoints via Swagger UI.
 
 ## 💻 Local Development (Without Docker)
 
-If you prefer to run the application locally for development or debugging, follow these steps:
+Because this microservice uses a decoupled architecture, you will need two seperate terminal windows to run the backend API and the frontend UI simultaneously.
 
 **1. Clone the repository:**
 
@@ -111,17 +111,29 @@ pip install -r requirements.txt
 
 Ensure your `.env` file is created exactly as shown in the Docker setup above.
 
-**5. Start the FastAPI server:**
+**5. Start the FastAPI Backend (Terminal 1):**
+
+Open a terminal window, ensure you are in the project root with the virtual environment activated, and run:
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
+**6. Start the Streamlit UI (Terminal 2):**
+
+Open a second terminal window, ensure you are in the project root with the virtual environment activated, and run:
+
+```bash
+streamlit run frontend/ui.py
+```
+
+The frontend UI will automatically open in your browser at `http://localhost:8501`
+
 ## 📡 API Reference
 
 ### `POST /upload-manuals`
 
-Ingests one or multiple PDF manuals, chunks the text, embeds it via HuggingFace, and merges it into the persistent FAISS vector store.
+Ingests one or multiple PDF manuals, chunks the text, embeds it via HuggingFace, and automatically persists it to the local ChromaDB database.
 
 * **Body:** `multipart/form-data`(Accepts an array of files)
 * **Response:** `{"message": "Successfully  processed X manuals"}`
@@ -139,6 +151,10 @@ JSON
     "session_id": "tech-session-01"
 }
 ```
+
+### `POST /ask-stream`
+
+Queries the RAG pipeline and returns a Server-Sent Events (SSE) stream. Designed for low Time-to-First-Token (TTFT) interactions in frontend UI applications.
 
 ### `GET /health`
 
