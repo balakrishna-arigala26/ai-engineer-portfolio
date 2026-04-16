@@ -26,6 +26,12 @@ This system is a strictly guarded Retrieval-Augmented Generation (RAG) microserv
   
   ![LangSmith Trace Dashboard detailing RAG pipeline execution](assets/images/langsmith-trace.png)
 
+* **Automated RAG Evaluation (LLM-as-a-Judge):** The pipeline is statistically audited using the open-source `ragas` framework. A dedicated evaluation script grades the RAG system against baseline golden datasets to ensure clinical safety, measuring:
+
+  * **Faithfulness:** Verifying that 100% of the LLM's claims can be traced directly back to the physical manual chunks (preventing hallucinations).
+
+  * **Answer Relevancy:** Ensuring the generated response directly and concisely answers the technician's prompt without tangential rambling.
+
 * **Anti-Hallucination Guardrails:** Employs strict prompt engineering to force the LLM to answer *only* from the vector context. If a procedure is not found in the ingested manuals, the API explicitly refuses to guess.
 
 * **"Page Drift" Correction:** Standard PDF loaders rely on digital indexing, causing citation mismatch. This service utilizes custom `PyMuPDF` extraction to identify and index the manufacturer's logical page labels, ensuring the AI cites the physical book accurately.
@@ -51,6 +57,8 @@ The system is decoupled into two independent workflows to ensure scalability:
 * **AI/Orchestration:** LangChain, Google Gemini (gemini-2.5-flash)
 
 * **Observability:** LangSmith
+
+* **Evaluation:** Ragas, HuggingFace Datasets
 
 * **Vector Database:** ChromaDB (Native disk persistence)
 
@@ -172,3 +180,35 @@ Queries the RAG pipeline and returns a Server-Sent Events (SSE) stream. Designed
 ### `GET /health`
 
 Standard production health check for load balancers and cloud deployment environments.
+
+### 📊 Running the Automated Evaluation (Ragas)
+
+This project uses the `ragas` framework to statistically audit the LLM's performance, ensuring strict clinical safety before deployment. It operates as an offline **LLM-as-a-Judge** architecture:
+
+1. **Input:** The script injects a dataset of "Golden Questions" into the RAG pipeline.
+
+2. **Retrieve & Generate:** The live system queries **ChromaDB** and generates an answer.
+
+3. **Audit:** A secondary, strictly templated LLM grades the output for **Faithfulness** (hallucination prevention) and **Answer Relevancy**.
+
+![Ragas Evaluation Terminal Output](assets/images/ragas-eval-scores.png)
+
+**To run the audit locally:**
+
+1. Ensure your virtual environment is activated.
+
+2. Install the specific evaluation dependencies (if not already installed via `requirements.txt`):
+
+```bash
+pip install ragas datasets pandas
+```
+
+3. Run the evaluation script from the project root:
+
+```bash
+python eval/evaluate_rag.py
+```
+
+4. The pipeline will output the aggregated metrics to your terminal and save a detailed CSV report to `eval/rag_evaluation_report.csv`.
+
+(`Note:` The evaluation script contains deliberate API throttling to respect free-tier rate limits. A full run of the test suite may take a few minutes).
