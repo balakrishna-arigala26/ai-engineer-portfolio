@@ -1,0 +1,18 @@
+# Git
+.git
+.gitignore
+
+# Virtual Environment
+venv/
+env/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment Variables
+.env
+
+# Local Database
+chroma_db/
