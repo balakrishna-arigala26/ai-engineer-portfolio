@@ -1,18 +1,56 @@
-# Git
-.git
+# ==========================================
+# 1. Version Control & CI/CD
+# ==========================================
+.git/
 .gitignore
+.github/
 
-# Virtual Environment
+# ==========================================
+# 2. Virtual Environments & Dependencies
+# ==========================================
 venv/
 env/
+.venv/
+.env/
 
-# Python Cache
+# ==========================================
+# 3. Security (CRITICAL)
+# ==========================================
+# NEVER upload your local API keys or secrets to the image
+.env
+.env.*
+*.pem
+*.key
+
+# ==========================================
+# 4. Python Cache & Compiled Files
+# ==========================================
+# Prevents local compiled code from conflicting with Linux container code
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
+.pytest_cache/
 
-# Environment Variables
-.env
-
-# Local Database
+# ==========================================
+# 5. Local Databases & State
+# ==========================================
+# Prevents uploading your massive local vector embeddings
 chroma_db/
+*.sqlite3
+*.db
+
+# ==========================================
+# 6. IDEs & OS Junk Files
+# ==========================================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# ==========================================
+# 7. Logs & Temporary Files
+# ==========================================
+logs/
+*.log
+tmp/
