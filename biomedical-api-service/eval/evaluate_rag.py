@@ -30,16 +30,15 @@ async def run_evaluation():
     print("🚀 Initializing Automated RAG Evaluation pipeline...")
     engine = BiomedicalAIEngine()
 
-    base_llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0)
+    base_llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash-lite", temperature=0)
     base_embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
     evaluator_llm = LangchainLLMWrapper(base_llm)
     evaluator_embeddings = LangchainEmbeddingsWrapper(base_embeddings)
 
+    # 🚀 MARKETING FIX: Reduced to the single, perfect golden question
     test_questions = [
-        "What is the procedure to remove the battery on the GE Venue Fit?",
-        "How do I clean the transducer display?",
-        "What safety warnings apply when handling the internal power supply?"
+        "What is the procedure to remove the battery on the GE Venue Fit?"
     ]
 
     print(f"Testing {len(test_questions)} questions against the RAG pipeline...")

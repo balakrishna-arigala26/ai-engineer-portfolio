@@ -75,7 +75,7 @@ To spin up this microservice locally for immediate testing, you need Docker inst
 **1. Clone the repository:**
 
 ```bash
-git clone [https://github.com/balakrishna-arigala26/biomedical-api-service.git](https://github.com/balakrishna-arigala26/biomedical-api-service.git)
+git clone https://github.com/balakrishna-arigala26/biomedical-api-service.git
 cd biomedical-api-service
 ```
 
@@ -107,12 +107,12 @@ Navigate to http://localhost:8000/docs to test the endpoints via Swagger UI.
 
 ## 💻 Local Development (Without Docker)
 
-To run the application locally fro development, you will need two seperate terminal windows for the backend and frontend.
+To run the application locally for development, you will need two separate terminal windows for the backend and frontend.
 
 **1. Clone the repository:**
 
 ```bash
-git clone [https://github.com/balakrishna-arigala26/biomedical-api-service.git](https://github.com/balakrishna-arigala26/biomedical-api-service.git)
+git clone https://github.com/balakrishna-arigala26/biomedical-api-service.git
 cd biomedical-api-service
 ```
 
@@ -158,7 +158,7 @@ The frontend UI will automatically open in your browser at `http://localhost:850
 Ingests one or multiple PDF manuals, chunks the text, embeds it via HuggingFace, and automatically persists it to the local ChromaDB database.
 
 * **Body:** `multipart/form-data`(Accepts an array of files)
-* **Response:** `{"message": "Successfully  processed X manuals"}`
+* **Response:** `{"message": "Successfully processed X manuals"}`
 
 ### `POST /ask`
 
@@ -212,3 +212,11 @@ python eval/evaluate_rag.py
 4. The pipeline will output the aggregated metrics to your terminal and save a detailed CSV report to `eval/rag_evaluation_report.csv`.
 
 (`Note:` The evaluation script contains deliberate API throttling to respect free-tier rate limits. A full run of the test suite may take a few minutes).
+
+## 🗺️ Roadmap & Future Enhancements
+
+* **Cloud Native Deployment:** Deploying the FastAPI backend to **Google Cloud Run** using a streamlined, CPU-optimized Docker image.
+
+* **Vector Architecture Pivot:** Migrating from local HuggingFace embeddings to API-based embeddings (e.g., `text-embedding-004`) to reduce the Docker container footprint from ~6GB to < 2GB.
+
+* **Expanded Evaluation:** Scaling the `ragas` Golden Dataset to cover edge-case cross-contamination scenarios between distinct medical devices.
